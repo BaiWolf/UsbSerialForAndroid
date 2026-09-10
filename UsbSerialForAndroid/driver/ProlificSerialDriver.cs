@@ -224,7 +224,10 @@ public class ProlificSerialDriver : UsbSerialDriver
             VendorIn(0x8383, 0, 1);
             VendorOut(0, 1, null);
             VendorOut(1, 0, null);
-            VendorOut(2, (mDeviceType == DeviceType.DEVICE_TYPE_HX) ? 0x44 : 0x24, null);
+            // BUGFIX: Match the official Java driver logic.
+            // If it's DEVICE_TYPE_01, send 0x24. Otherwise (HX, T, etc.), send 0x44.
+            // The previous C# port incorrectly sent 0x24 for DEVICE_TYPE_T (PL2303TA).
+            VendorOut(2, (mDeviceType == DeviceType.DEVICE_TYPE_01) ? 0x24 : 0x44, null);
         }
 
         private void SetControlLines(int newControlLinesValue)
