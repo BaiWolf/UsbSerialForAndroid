@@ -287,7 +287,9 @@ public class Ch34xSerialDriver : UsbSerialDriver
 
             SetControlLines();
 
-            CheckState("init #10", 0x95, 0x0706, [-1, 0xee]);
+            // Match the upstream Java driver: status register values vary between devices
+            // (for example 0xee or 0x88). CheckState still requires a successful two-byte read.
+            CheckState("init #10", 0x95, 0x0706, [-1, -1]);
         }
 
         private void SetBaudRate(int baudRate)
